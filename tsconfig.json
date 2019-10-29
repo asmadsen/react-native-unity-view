@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+	"sourceRoot": "./src",
+	"outDir": "./dist",
+	"moduleResolution": "node",
+	"lib": [
+	  "dom",
+	  "es2017"
+	],
+	"jsx": "react",
+	"declaration": true,
+	"sourceMap": true
+  },
+  "exclude": [
+	"node_modules"
+  ]
+}
