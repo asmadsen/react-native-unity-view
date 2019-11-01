@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
 
   s.dependency "React"
   s.pod_target_xcconfig = {
-	'HEADER_SEARCH_PATHS' => '"${PODS_ROOT}/../UnityExport" "${PODS_ROOT}/../UnityExport/Classes" "${PODS_ROOT}/../UnityExport/Classes/Unity" "${PODS_ROOT}/../UnityExport/Classes/Native" "${PODS_ROOT}/../UnityExport/Libraries" "${PODS_ROOT}/../UnityExport/Libraries/libil2cpp/include" ${PODS_HEADER_PATHS}',
+	'HEADER_SEARCH_PATHS' => '"${PODS_ROOT}/../UnityExport" "${PODS_ROOT}/../UnityExport/Classes" "${PODS_ROOT}/../UnityExport/Classes/Unity" "${PODS_ROOT}/../UnityExport/Classes/Native" "${PODS_ROOT}/../UnityExport/Libraries" "${PODS_ROOT}/../UnityExport/Libraries/libil2cpp/include" ${PODS_HEADER_PATHS}'
   }
   s.user_target_xcconfig = {
     'UNITY_SCRIPTING_BACKEND' => 'il2cpp',
@@ -43,7 +43,6 @@ Pod::Spec.new do |s|
     'CLANG_WARN_UNREACHABLE_CODE' => 'NO',
     'CLANG_WARN__DUPLICATE_METHOD_MATCH' => 'NO',
     'GCC_C_LANGUAGE_STANDARD' => 'c99',
-    'GCC_ENABLE_OBJC_EXCEPTIONS' => 'NO',
     'GCC_ENABLE_CPP_RTTI' => 'NO',
     'GCC_PRECOMPILE_PREFIX_HEADER' => 'YES',
     'GCC_THUMB_SUPPORT' => 'NO',

@@ -51,11 +51,21 @@ the Untiy Project*
 2. Go to Player settings (File => Build Settings => Player Settings)
 3. Change `Product Name` to the name of your Xcode project. (`ios/${XcodeProjectName}.xcodeproj`)
 
+##### Additional changes for Android Platform
+
+Under `Other Settings` make sure `Scripting Backend` is set to `IL2CPP`, and `ARM64` is checked under `Target Architectures`.
+
+![Android Configruation](docs/android-player-settings.png) 
+
 ##### Additional changes for iOS Platform
 
 Under `Other Settings` make sure `Auto Graphics API` is unchecked and only `OpenGLES2` is listed under `Graphics APIs`
 
 ![Player settings for iOS](docs/ios-player-settings.png)
+
+Make sure the `Bundle Identifier` matches the one in XCode
+
+![Bundle Identifier](docs/bundle-id.png)
 
 #### Now Unity is configured and ready
 
@@ -82,7 +92,38 @@ include ":UnityExport"
 project(":UnityExport").projectDir = file("./UnityExport")
 ```
 
+##### After Unity Export
+
+Node: After each Unity Export to Android you will have to delete the following from the bottom of the `android/UnityExport/build.gralde`
+
+```
+    bundle {
+        language {
+            enableSplit = false
+        }
+        density {
+            enableSplit = false
+        }
+        abi {
+            enableSplit = true
+        }
+    }
+```
+
 #### iOS build
+
+Modify `main.m`
+
+```objectivec
+#import "UnityUtils.h"
+
+int main(int argc, char * argv[]) {
+  @autoreleasepool {
+    InitArgs(argc, argv);
+    return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
+  }
+}
+```
 
 ## Use in React Native
 

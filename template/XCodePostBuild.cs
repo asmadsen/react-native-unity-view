@@ -54,7 +54,7 @@ public static class XcodePostBuild
     /// Sample value: "../xcode"
     /// </summary>
     private const string XcodeProjectRoot = "../../ios";
-    
+
     /// <summary>
     /// Name of the Xcode project.
     /// This script looks for '${XcodeProjectName} + ".xcodeproj"' under '${XcodeProjectRoot}'.
