@@ -3,7 +3,7 @@ import { NativeModules, requireNativeComponent, View, ViewProps, ViewPropTypes }
 import * as PropTypes from 'prop-types'
 import MessageHandler from './MessageHandler'
 import { UnityModule, UnityViewMessage } from './UnityModule'
-import { useEffect, useState } from 'react'
+import { Component, useEffect, useState } from 'react'
 
 const { UIManager } = NativeModules
 
@@ -17,9 +17,51 @@ export interface UnityViewProps extends ViewProps {
      */
     onUnityMessage?: (handler: MessageHandler) => void;
 
-    children: React.ReactNode
+    children?: React.ReactNode
 }
 
+let NativeUnityView
+
+class UnityView extends Component<UnityViewProps> {
+
+    state = {
+        handle: null
+    }
+
+    componentDidMount(): void {
+        const { onUnityMessage, onMessage } = this.props
+        this.setState({
+            handle: UnityModule.addMessageListener(message => {
+                if (onUnityMessage && message instanceof MessageHandler) {
+                    onUnityMessage(message)
+                }
+                if (onMessage && typeof message === 'string') {
+                    onMessage(message)
+                }
+            })
+        })
+    }
+
+    componentWillUnmount(): void {
+        UnityModule.removeMessageListener(this.state.handle)
+    }
+
+    render() {
+        const { props } = this
+        return (
+            <View {...props}>
+            <NativeUnityView
+                style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
+                onUnityMessage={props.onUnityMessage}
+                onMessage={props.onMessage}
+            >
+            </NativeUnityView>
+            {props.children}
+        </View>
+        )
+    }
+}
+/*
 const UnityView = ({ onUnityMessage, onMessage, ...props } : UnityViewProps) => {
     const [handle, setHandle] = useState(null)
 
@@ -35,7 +77,7 @@ const UnityView = ({ onUnityMessage, onMessage, ...props } : UnityViewProps) => 
         return () => {
             UnityModule.removeMessageListener(handle)
         }
-    })
+    }, [onUnityMessage, onMessage, handle, setHandle])
 
     return (
         <View {...props}>
@@ -49,50 +91,8 @@ const UnityView = ({ onUnityMessage, onMessage, ...props } : UnityViewProps) => 
         </View>
     )
 }
+*/
+
+NativeUnityView = requireNativeComponent('UnityView', UnityView)
 
 export default UnityView;
-
-class oldUnityView extends React.Component<UnityViewProps> {
-    public static propTypes = {
-        ...ViewPropTypes,
-        onMessage: PropTypes.func
-    }
-
-    private handle: number
-
-    constructor (props) {
-        super(props)
-    }
-
-    public componentWillMount () {
-        this.handle = UnityModule.addMessageListener(message => {
-            if (this.props.onUnityMessage && message instanceof MessageHandler) {
-                this.props.onUnityMessage(message)
-            }
-            if (this.props.onMessage && typeof message === 'string') {
-                this.props.onMessage(message)
-            }
-        })
-    }
-
-    public componentWillUnmount () {
-        UnityModule.removeMessageListener(this.handle)
-    }
-
-    public render () {
-        const { onUnityMessage, onMessage, ...props } = this.props
-        return (
-            <View {...props}>
-                <NativeUnityView
-                    style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
-                    onUnityMessage={onUnityMessage}
-                    onMessage={onMessage}
-                >
-                </NativeUnityView>
-                {this.props.children}
-            </View>
-        )
-    }
-}
-
-const NativeUnityView = requireNativeComponent('UnityView', UnityView)
