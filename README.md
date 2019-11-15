@@ -11,7 +11,7 @@ to make it work with the newest Unity version (2019.2.9f1) and React Native >= 0
 
 ## Install
 
-`yarn add react-native-unity-view`
+`yarn add @asmadsen/react-native-unity-view`
 
 ## Configuration
 
