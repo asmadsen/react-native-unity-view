@@ -3,18 +3,18 @@ package no.asmadsen.unity.view;
 import com.facebook.react.bridge.*;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
-public class UnityViewModule extends ReactContextBaseJavaModule implements UnityEventListener {
+public class UnityNativeModule extends ReactContextBaseJavaModule implements UnityEventListener {
 
     private final ReactApplicationContext reactContext;
 
-    public UnityViewModule(ReactApplicationContext reactContext) {
+    public UnityNativeModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
     }
 
     @Override
     public String getName() {
-        return "UnityView";
+        return "UnityNativeModule";
     }
 
 
