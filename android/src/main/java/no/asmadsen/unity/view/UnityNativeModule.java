@@ -1,15 +1,17 @@
 package no.asmadsen.unity.view;
 
-import com.facebook.react.bridge.*;
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 public class UnityNativeModule extends ReactContextBaseJavaModule implements UnityEventListener {
 
-    private final ReactApplicationContext reactContext;
-
     public UnityNativeModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.reactContext = reactContext;
+        UnityUtils.addUnityEventListener(this);
     }
 
     @Override
