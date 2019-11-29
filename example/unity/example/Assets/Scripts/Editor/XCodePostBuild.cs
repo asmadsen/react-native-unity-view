@@ -215,7 +215,7 @@ public static class XcodePostBuild
 
     /// <summary>
     /// Compares the directories. Returns files that exists in src and
-    /// extra files that exists in dest but not in src any more. 
+    /// extra files that exists in dest but not in src any more.
     /// </summary>
     private static void CompareDirectories(string src, string dest, out string[] srcFiles, out string[] extraFiles)
     {
@@ -307,7 +307,7 @@ public static class XcodePostBuild
         var inScope = false;
         var markerDetected = false;
         var markerAdded = false;
-        
+
         // Add static GetAppController
         EditCodeFile(path, line =>
         {
@@ -328,7 +328,7 @@ public static class XcodePostBuild
                     };
                 }
             }
-            
+
             return new string[] { line };
         });
 

@@ -5,7 +5,7 @@
 
 @synthesize bridge = _bridge;
 
-RCT_EXPORT_MODULE(UnityView)
+RCT_EXPORT_MODULE(RNUnityView)
 
 - (UIView *)view
 {
