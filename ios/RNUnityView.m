@@ -1,7 +1,5 @@
 #import "RNUnityView.h"
 
-
-
 @implementation RNUnityView
 
 - (id)initWithFrame:(CGRect)frame
@@ -14,7 +12,7 @@
 {
 }
 
-- (void)setUnityView:(RNUnityView *)view
+- (void)setUnityView:(UIView *)view
 {
     self.uView = view;
     [self setNeedsLayout];

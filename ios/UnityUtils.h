@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import <UnityFramework/UnityFramework.h>
 
 #ifndef UnityUtils_h
 #define UnityUtils_h
@@ -6,9 +7,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
+
 void InitArgs(int argc, char* argv[]);
-    
+
 bool UnityIsInited(void);
 
 void InitUnity();
@@ -23,9 +24,6 @@ void UnityResumeCommand();
 } // extern "C"
 #endif
 
-@protocol UnityEventListener <NSObject>
-- (void)onMessage:(NSString *)message;
-@end
 
 @interface UnityUtils : NSObject
 

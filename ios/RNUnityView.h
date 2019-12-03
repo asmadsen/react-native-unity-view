@@ -1,7 +1,5 @@
 #import <UIKit/UIKit.h>
 #import <React/UIView+React.h>
-
-#import "UnityAppController.h"
 #import "UnityUtils.h"
 
 
