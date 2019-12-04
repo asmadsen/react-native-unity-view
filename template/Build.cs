@@ -22,7 +22,7 @@ public class Build : MonoBehaviour {
     public static void DoBuildAndroidLibrary() {
         DoBuildAndroid(Path.Combine(apkPath, "unityLibrary"));
 
-        Copy(Path.Combine(apkPath, "/launcher/src/main/res"), Path.Combine(androidExportPath, "src/main/res"));
+        Copy(Path.Combine(apkPath, "launcher/src/main/res"), Path.Combine(androidExportPath, "src/main/res"));
     }
 
     [MenuItem("ReactNative/Export Android legacy %&a", false, 2)]
