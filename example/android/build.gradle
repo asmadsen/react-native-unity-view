@@ -3,7 +3,7 @@
 buildscript {
     ext {
         buildToolsVersion = "28.0.3"
-        minSdkVersion = 16
+        minSdkVersion = 19
         compileSdkVersion = 28
         targetSdkVersion = 28
     }
@@ -34,5 +34,8 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://jitpack.io' }
+        flatDir {
+            dirs "${project(':UnityExport').projectDir}/libs"
+        }
     }
 }

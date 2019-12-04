@@ -23,6 +23,7 @@ public class Rotate : MonoBehaviour
         var data = message.getData<string>();
         Debug.Log("onMessage:" + data);
         canRotate = !canRotate;
+        UnityMessageManager.Instance.SendMessageToRN("Now it is " + (canRotate ? "": "not ") + "rotating");
         message.send(new { CallbackTest = "I am Unity callback" });
     }
 

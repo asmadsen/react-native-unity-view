@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -8,23 +7,36 @@ using UnityEngine;
 using Application = UnityEngine.Application;
 using BuildResult = UnityEditor.Build.Reporting.BuildResult;
 
-public class Build : MonoBehaviour
-{
+public class Build : MonoBehaviour {
     static readonly string ProjectPath = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
 
     static readonly string apkPath = Path.Combine(ProjectPath, "Builds/" + Application.productName + ".apk");
 
-    [MenuItem("Build/Export Android %&a", false, 1)]
-    public static void DoBuildAndroid()
-    {
-        string buildPath = Path.Combine(apkPath, Application.productName);
-        string exportPath = Path.GetFullPath(Path.Combine(ProjectPath, "../../android/UnityExport"));
+    private static readonly string androidExportPath =
+        Path.GetFullPath(Path.Combine(ProjectPath, "../../android/UnityExport"));
 
-        if (Directory.Exists(apkPath))
+    private static readonly string iosExportPath =
+        Path.GetFullPath(Path.Combine(ProjectPath, "../../ios/UnityExport"));
+
+    [MenuItem("ReactNative/Export Android (Unity 2019.3.*) %&n", false, 1)]
+    public static void DoBuildAndroidLibrary() {
+        DoBuildAndroid(Path.Combine(apkPath, "unityLibrary"));
+        
+        Copy(Path.Combine(apkPath, "launcher/src/main/res"), Path.Combine(androidExportPath, "src/main/res"));
+    }
+    
+    [MenuItem("ReactNative/Export Android legacy %&a", false, 2)]
+    public static void DoBuildAndroidLegacy() {
+        DoBuildAndroid(Path.Combine(apkPath, Application.productName));
+    }
+
+    public static void DoBuildAndroid(String buildPath) {
+        if (Directory.Exists(apkPath)) {
             Directory.Delete(apkPath, true);
-
-        if (Directory.Exists(exportPath))
-            Directory.Delete(exportPath, true);
+        }
+        if (Directory.Exists(androidExportPath)) {
+            Directory.Delete(androidExportPath, true);
+        }
 
         EditorUserBuildSettings.androidBuildSystem = AndroidBuildSystem.Gradle;
 
@@ -36,22 +48,24 @@ public class Build : MonoBehaviour
             options
         );
 
-        if (report.summary.result != BuildResult.Succeeded)
+        if (report.summary.result != BuildResult.Succeeded) {
             throw new Exception("Build failed");
-
-        Copy(buildPath, exportPath);
-
+        }
+        
+        Copy(buildPath, androidExportPath);
         // Modify build.gradle
-        var build_file = Path.Combine(exportPath, "build.gradle");
+        var build_file = Path.Combine(androidExportPath, "build.gradle");
         var build_text = File.ReadAllText(build_file);
         build_text = build_text.Replace("com.android.application", "com.android.library");
-        build_text = build_text.Replace("implementation fileTree(dir: 'libs', include: ['*.jar'])", "api fileTree(include: ['*.jar'], dir: 'libs')");
-        // build_text = build_text.Replace("implementation(name: 'VuforiaWrapper', ext:'aar')", "api(name: 'VuforiaWrapper', ext: 'aar')");
-        build_text = Regex.Replace(build_text, @"\n.*applicationId '.+'.*\n", "\n");
+        build_text = build_text.Replace("bundle {", "splits {");
+        build_text = build_text.Replace("enableSplit = false", "enable false");
+        build_text = build_text.Replace("enableSplit = true", "enable true");
+        build_text = build_text.Replace("implementation fileTree(dir: 'libs', include: ['*.jar'])", "implementation ':unity-classes'");
+        // build_text = Regex.Replace(build_text, @"\n.*applicationId '.+'.*\n", "\n");
         File.WriteAllText(build_file, build_text);
 
         // Modify AndroidManifest.xml
-        var manifest_file = Path.Combine(exportPath, "src/main/AndroidManifest.xml");
+        var manifest_file = Path.Combine(androidExportPath, "src/main/AndroidManifest.xml");
         var manifest_text = File.ReadAllText(manifest_file);
         manifest_text = Regex.Replace(manifest_text, @"<application .*>", "<application>");
         Regex regex = new Regex(@"<activity.*>(\s|\S)+?</activity>", RegexOptions.Multiline);
@@ -59,30 +73,28 @@ public class Build : MonoBehaviour
         File.WriteAllText(manifest_file, manifest_text);
     }
 
-    [MenuItem("Build/Export IOS %&i", false, 2)]
-    public static void DoBuildIOS()
-    {
-        string exportPath = Path.GetFullPath(Path.Combine(ProjectPath, "../../ios/UnityExport"));
-
-        if (Directory.Exists(exportPath))
-            Directory.Delete(exportPath, true);
+    [MenuItem("ReactNative/Export IOS (Unity 2019.3.*) %&i", false, 3)]
+    public static void DoBuildIOS() {
+        if (Directory.Exists(iosExportPath)) {
+            Directory.Delete(iosExportPath, true);
+        }
 
         EditorUserBuildSettings.iOSBuildConfigType = iOSBuildType.Release;
 
         var options = BuildOptions.AcceptExternalModificationsToPlayer;
         var report = BuildPipeline.BuildPlayer(
             GetEnabledScenes(),
-            exportPath,
+            iosExportPath,
             BuildTarget.iOS,
             options
         );
 
-        if (report.summary.result != BuildResult.Succeeded)
+        if (report.summary.result != BuildResult.Succeeded) {
             throw new Exception("Build failed");
+        }
     }
 
-    static void Copy(string source, string destinationPath)
-    {
+    static void Copy(string source, string destinationPath) {
         if (Directory.Exists(destinationPath))
             Directory.Delete(destinationPath, true);
 
@@ -97,8 +109,7 @@ public class Build : MonoBehaviour
             File.Copy(newPath, newPath.Replace(source, destinationPath), true);
     }
 
-    static string[] GetEnabledScenes()
-    {
+    static string[] GetEnabledScenes() {
         var scenes = EditorBuildSettings.scenes
             .Where(s => s.enabled)
             .Select(s => s.path)

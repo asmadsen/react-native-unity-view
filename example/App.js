@@ -14,6 +14,8 @@ import {
   View,
   Text,
   StatusBar,
+    Button,
+    Alert
 } from 'react-native';
 
 import {
@@ -23,27 +25,37 @@ import {
   DebugInstructions,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import UnityView from '@asmadsen/react-native-unity-view';
+import UnityView, { UnityModule } from '@asmadsen/react-native-unity-view';
 
 const App: () => React$Node = () => {
   const [count, setClickCount] = useState(0)
   console.log(count)
-  const onUnityMessage = (hander: MessageHandler) => {
-    setClickCount(count + 1)
-    setTimeout(() => {
-      hander.send('I am click callback!');
-    }, 2000);
+  const onUnityMessage = (hander) => {
+    console.log({hander})
+  }
+
+  const onClick = () => {
+      UnityModule.postMessageToUnityManager({
+                                                name: 'ToggleRotate',
+                                                data: '',
+                                                callBack: (data) => {
+                                                    Alert.alert('Tip', JSON.stringify(data))
+                                                }
+                                            });
   }
 
 
   return (
-      <View
-          style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
-      >
-        <UnityView
-            style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
-            onMessage={onUnityMessage}
-        />
+      <View  style={{ flex: 1 }}>
+          <View style={{ flex: 1 }}>
+            <UnityView
+                style={{ flex: 1 }}
+                onMessage={onUnityMessage}
+                onUnityMessage={onUnityMessage}
+            />
+          </View>
+        <Button style={{ width: '100%' }} title="Toggle rotation" onPress={onClick}/>
+
       </View>
   );
 };
