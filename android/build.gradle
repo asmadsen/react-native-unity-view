@@ -63,6 +63,7 @@ dependencies {
     // https://github.com/facebook/react-native/blob/0.61-stable/template/android/app/build.gradle#L192
     //noinspection GradleDynamicVersion
     implementation project(':UnityExport')
+    implementation ':unity-classes'
     implementation 'com.facebook.react:react-native:+'  // From node_modules
 }
 

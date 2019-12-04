@@ -2,10 +2,12 @@
 
 Integrate unity3d within a React Native app. Add a react native component to show unity. Works on both iOS and Android.
 
+__*If you're using a Unity version older than 2019.3 you can only export to android*__
+
 ## Notice
 
 This is a fork of [https://github.com/f111fei/react-native-unity-view](https://github.com/f111fei/react-native-unity-view)
-to make it work with the newest Unity version (2019.2.9f1) and React Native >= 0.60.
+to make it work with React Native >= 0.60.
 
 **This project may or may not be updated depending on the further use of it at my workplace, however feel free to fork it** 
 
@@ -57,19 +59,20 @@ Under `Other Settings` make sure `Scripting Backend` is set to `IL2CPP`, and `AR
 
 ![Android Configruation](docs/android-player-settings.png) 
 
+Under `Other Settings` make sure `Auto Graphics API` is unchecked, and the list only contains `OpenGLES3` and `OpenGLES2` in that order.
+
+![Android graphics](docs/android-graphics.png) 
+ 
+
 ##### Additional changes for iOS Platform
 
-Under `Other Settings` make sure `Auto Graphics API` is unchecked and only `OpenGLES2` is listed under `Graphics APIs`
+Under `Other Settings` make sure `Auto Graphics API` is checked.
 
 ![Player settings for iOS](docs/ios-player-settings.png)
 
-Make sure the `Bundle Identifier` matches the one in XCode
-
-![Bundle Identifier](docs/bundle-id.png)
-
 #### Now Unity is configured and ready
 
-Now you can export the Unity Project using `Build => Export Android` or `Build => Export IOS`.
+Now you can export the Unity Project using `ReactNative => Export Android` or `ReactNative => Export IOS`.
 
 ![Build dropdown](docs/unity-build.png)
 
@@ -87,6 +90,27 @@ Add the contents of the [Assets](template/Assets) folder, to your Unity project.
 
 To allow for the project to recognize the `UnityExport` folder you will have to add two lines to `android/settings.gradle`.
 
+1. Add the following to the `android/build.gradle`
+```
+flatDir {
+    dirs "${project(':UnityExport').projectDir}/libs"
+}
+```
+So it looks like this
+```
+// [..]
+allprojects {
+    repositories {
+        // [..]
+        flatDir {
+            dirs "${project(':UnityExport').projectDir}/libs"
+        }
+    }
+}
+```
+
+2. Add these two lines to `android/settings.gradle`
+
 ```
 include ":UnityExport"
 project(":UnityExport").projectDir = file("./UnityExport")
@@ -94,25 +118,21 @@ project(":UnityExport").projectDir = file("./UnityExport")
 
 ##### After Unity Export
 
-Node: After each Unity Export to Android you will have to delete the following from the bottom of the `android/UnityExport/build.gralde`
-
-```
-    bundle {
-        language {
-            enableSplit = false
-        }
-        density {
-            enableSplit = false
-        }
-        abi {
-            enableSplit = true
-        }
-    }
-```
-
 #### iOS build
 
-Modify `main.m`
+1. Open your `ios/{PRODUCT_NAME}.xcworkspace` and add the exported project(`ios/UnityExport/Unity-Iphone.xcodeproj`) to the workspace root
+
+![Add unity ios project to ReactNative Ios workspace](docs/ios-add-unity-project.png)
+
+2. Select the `Unity-iPhone/Data` folder and change the Target Membership to UnityFramework
+
+![Set Target Membership of Data folder to UnityFramework](docs/ios-set-target-membership.png)
+
+3. Add `UnityFramework.framework` as a library to your Project
+
+![Add UnityFramework to project](docs/ios-add-unityframework.png)
+
+4. Modify `main.m`
 
 ```objectivec
 #import "UnityUtils.h"

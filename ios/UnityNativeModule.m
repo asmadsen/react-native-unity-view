@@ -6,15 +6,6 @@
 
 RCT_EXPORT_MODULE(UnityNativeModule);
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        [UnityUtils addUnityEventListener:self];
-    }
-    return self;
-}
-
 - (NSArray<NSString *> *)supportedEvents
 {
     return @[@"onUnityMessage"];
@@ -50,14 +41,6 @@ RCT_EXPORT_METHOD(pause)
 RCT_EXPORT_METHOD(resume)
 {
     UnityResumeCommand();
-}
-
-- (void)onMessage:(NSString *)message {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    [_bridge.eventDispatcher sendDeviceEventWithName:@"onUnityMessage"
-                                                body:message];
-#pragma clang diagnostic pop
 }
 
 @end

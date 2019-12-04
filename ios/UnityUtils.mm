@@ -156,21 +156,4 @@ static BOOL _isUnityReady = NO;
     });
 }
 
-extern "C" void onUnityMessage(const char* message)
-{
-    for (id<UnityEventListener> listener in mUnityEventListeners) {
-        [listener onMessage:[NSString stringWithUTF8String:message]];
-    }
-}
-
-+ (void)addUnityEventListener:(id<UnityEventListener>)listener
-{
-    [mUnityEventListeners addObject:listener];
-}
-
-+ (void)removeUnityEventListener:(id<UnityEventListener>)listener
-{
-    [mUnityEventListeners removeObject:listener];
-}
-
 @end
