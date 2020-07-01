@@ -142,15 +142,16 @@ static BOOL _isUnityReady = NO;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         UIApplication* application = [UIApplication sharedApplication];
-
-        // Always keep RN window in top
-        application.keyWindow.windowLevel = UIWindowLevelNormal + 1;
+        application.keyWindow.windowLevel = UIWindowLevelNormal;
 
         InitUnity();
 
         UnityAppController *controller = GetAppController();
         [controller application:application didFinishLaunchingWithOptions:nil];
         [controller applicationDidBecomeActive:application];
+
+        // Move Unity window below the React Native window. Do it this way rather than putting React Native at UIWindowLevelNormal + 1 because that blocks the SKStoreReviewController popup
+        [controller window].windowLevel = UIWindowLevelNormal - 1;
 
         [UnityUtils listenAppState];
     });
