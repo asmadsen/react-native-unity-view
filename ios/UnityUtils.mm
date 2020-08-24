@@ -147,11 +147,14 @@ static BOOL _isUnityReady = NO;
         application.keyWindow.windowLevel = UIWindowLevelNormal + 1;
 
         InitUnity();
-
+        
         UnityAppController *controller = GetAppController();
         [controller application:application didFinishLaunchingWithOptions:nil];
         [controller applicationDidBecomeActive:application];
-
+        
+        // Makes RN window key window to handle events
+        [application.windows[1] makeKeyWindow];
+        
         [UnityUtils listenAppState];
     });
 }
