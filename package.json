@@ -1,7 +1,7 @@
 {
   "name": "@asmadsen/react-native-unity-view",
   "title": "React Native Unity View",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Embed Unity Player inside a React Native app",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
