@@ -17,7 +17,9 @@ export interface UnityViewProps extends ViewProps {
      */
     onUnityMessage?: (handler: MessageHandler) => void;
 
-    children?: React.ReactNode
+    children?: React.ReactNode;
+
+    unloadOnUnmount?: boolean;
 }
 
 let NativeUnityView
@@ -43,7 +45,11 @@ class UnityView extends Component<UnityViewProps> {
     }
 
     componentWillUnmount(): void {
-        UnityModule.removeMessageListener(this.state.handle)
+        const { unloadOnUnmount } = this.props;
+        UnityModule.removeMessageListener(this.state.handle);
+        if (unloadOnUnmount) {
+          UnityModule.unloadPlayer();
+        }
     }
 
     render() {

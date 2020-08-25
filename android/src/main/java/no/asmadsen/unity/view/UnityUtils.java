@@ -35,6 +35,7 @@ public class UnityUtils {
 
     public static void createPlayer(final Activity activity, final CreateCallback callback) {
         if (unityPlayer != null) {
+            _isUnityReady = true;
             callback.onReady();
             return;
         }
@@ -68,6 +69,21 @@ public class UnityUtils {
                     activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
                 }
                 _isUnityReady = true;
+                callback.onReady();
+            }
+        });
+    }
+
+    public static void unloadPlayer(final Activity activity, final CreateCallback callback) {
+        if (unityPlayer == null) {
+            callback.onReady();
+            return;
+        }
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                unityPlayer.unload();
+                _isUnityReady = false;
                 callback.onReady();
             }
         });

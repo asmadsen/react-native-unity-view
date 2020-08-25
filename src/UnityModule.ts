@@ -21,6 +21,11 @@ export interface UnityModule {
     createUnity (): Promise<boolean>;
 
     /**
+     * Manual destroy the Unity. This function should be call on your component unmount effect.
+     */
+    unloadPlayer(): Promise<boolean>;
+
+    /**
      * Send Message to UnityMessageManager.
      * @param message The message will post.
      */
@@ -110,6 +115,10 @@ class UnityModuleImpl implements UnityModule {
 
     public async isReady () {
         return UnityNativeModule.isReady()
+    }
+
+    public async unloadPlayer() {
+        return UnityNativeModule.unloadPlayer()
     }
 
     public async createUnity () {
