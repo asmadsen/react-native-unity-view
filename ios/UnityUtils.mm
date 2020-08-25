@@ -142,9 +142,7 @@ static BOOL _isUnityReady = NO;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         UIApplication* application = [UIApplication sharedApplication];
-
-        // Always keep RN window in top
-        application.keyWindow.windowLevel = UIWindowLevelNormal + 1;
+        UIWindow* prevKeyWindow = application.keyWindow;
 
         InitUnity();
         
@@ -156,6 +154,11 @@ static BOOL _isUnityReady = NO;
         [application.windows[1] makeKeyWindow];
         
         [UnityUtils listenAppState];
+
+        // Always keep RN window in top
+        controller.window.windowLevel = prevKeyWindow.windowLevel - 1;
+        // Make RN window the key window again
+        [prevKeyWindow makeKeyWindow];
     });
 }
 
