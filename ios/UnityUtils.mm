@@ -89,8 +89,8 @@ extern "C" void UnityUnloadCommand()
     }
 }
 
-// Loads Unity after "[ufw unloadApplication];"
-extern "C" void UnityReInitializeCommand()
+// Loads the Unity Runtime after "[ufw unloadApplication];"
+extern "C" void UnityReloadAfterUnloadCommand()
 {
     if (unity_inited && unity_unloaded)
     {
@@ -173,7 +173,7 @@ static BOOL _isUnityReady = NO;
         // Always keep RN window in top
         application.keyWindow.windowLevel = UIWindowLevelNormal + 1;
 
-        // Initialize Unity
+        // Initialize the Unity Runtime
         InitUnity();
 
         // Makes RN window key window to handle events

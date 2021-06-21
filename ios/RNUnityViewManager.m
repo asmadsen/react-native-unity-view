@@ -58,9 +58,9 @@ RCT_EXPORT_METHOD(unload:(nonnull NSNumber *)reactTag)
     UnityUnloadCommand();
 }
 
-RCT_EXPORT_METHOD(reInitialize:(nonnull NSNumber *)reactTag)
+RCT_EXPORT_METHOD(reloadAfterUnload:(nonnull NSNumber *)reactTag)
 {
-    UnityReInitializeCommand();
+    UnityReloadAfterUnloadCommand();
 }
 
 @end

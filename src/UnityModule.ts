@@ -52,7 +52,7 @@ export interface UnityModule {
     /**
      * Re initialize the unity player
      */
-    reInitialize(): void;
+    reloadAfterUnload(): void;
 
     /**
      * Receive string and json message from unity.
@@ -159,9 +159,9 @@ class UnityModuleImpl implements UnityModule {
         UnityNativeModule.unload()
     }
 
-    public reInitialize()
+    public reloadAfterUnload()
     {
-        UnityNativeModule.reInitialize()
+        UnityNativeModule.reloadAfterUnload()
     }
 
     public addMessageListener (listener: (handler: string | MessageHandler) => void) {

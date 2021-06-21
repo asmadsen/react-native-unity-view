@@ -22,7 +22,7 @@ void UnityResumeCommand();
 
 void UnityUnloadCommand();
 
-void UnityReInitializeCommand();
+void UnityReloadAfterUnloadCommand();
 
 #ifdef __cplusplus
 } // extern "C"
