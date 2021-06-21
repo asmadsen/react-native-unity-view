@@ -50,7 +50,7 @@ export interface UnityModule {
     unload (): void;
 
     /**
-     * Re initialize the unity player
+     * Reloads the unity player after UnityModule.unload(), or Application.Unload().
      */
     reloadAfterUnload(): void;
 
