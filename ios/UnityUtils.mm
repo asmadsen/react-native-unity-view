@@ -9,7 +9,7 @@
 static const int constsection = 0;
 
 bool unity_inited = false;
-
+bool unity_unloaded = false;
 int g_argc;
 char** g_argv;
 
@@ -40,19 +40,6 @@ UnityFramework* UnityFrameworkLoad() {
     return ufw;
 }
 
-extern "C" void InitUnity()
-{
-    if (unity_inited) {
-        return;
-    }
-    unity_inited = true;
-
-    ufw = UnityFrameworkLoad();
-
-    [ufw setDataBundleId: "com.unity3d.framework"];
-    [ufw frameworkWarmup: g_argc argv: g_argv];
-}
-
 extern "C" void UnityPostMessage(NSString* gameObject, NSString* methodName, NSString* message)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -72,6 +59,26 @@ extern "C" void UnityResumeCommand()
     dispatch_async(dispatch_get_main_queue(), ^{
         [ufw pause:false];
     });
+}
+
+extern "C" void UnityUnloadCommand()
+{
+    unity_unloaded = true;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [ufw unloadApplication];
+    });
+}
+
+extern "C" void UnityReInitializeCommand()
+{
+    if (unity_unloaded)
+    {
+    // initialize from partial unload ( sceneLessMode & onPause )
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [ufw reloadApplication];
+        });
+    }
 }
 
 @implementation UnityUtils
@@ -124,6 +131,11 @@ static BOOL _isUnityReady = NO;
     }
 }
 
+extern "C" void InitUnity()
+{
+    
+}
+
 + (void)createPlayer:(void (^)(void))completed
 {
     if (_isUnityReady) {
@@ -139,14 +151,19 @@ static BOOL _isUnityReady = NO;
     if (UnityIsInited()) {
         return;
     }
-
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         UIApplication* application = [UIApplication sharedApplication];
 
         // Always keep RN window in top
         application.keyWindow.windowLevel = UIWindowLevelNormal + 1;
 
-        InitUnity();
+        unity_inited = true;
+
+        ufw = UnityFrameworkLoad();
+
+        [ufw setDataBundleId: "com.unity3d.framework"];
+        [ufw frameworkWarmup: g_argc argv: g_argv];
         
         UnityAppController *controller = GetAppController();
         [controller application:application didFinishLaunchingWithOptions:nil];

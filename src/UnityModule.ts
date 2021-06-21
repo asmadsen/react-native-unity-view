@@ -40,9 +40,19 @@ export interface UnityModule {
     pause (): void;
 
     /**
-     * Pause the unity player
+     * Resume the unity player
      */
     resume (): void;
+
+    /**
+     * Unload the unity player
+     */
+    unload (): void;
+
+    /**
+     * Re initialize the unity player
+     */
+    reInitialize(): void;
 
     /**
      * Receive string and json message from unity.
@@ -143,6 +153,15 @@ class UnityModuleImpl implements UnityModule {
 
     public resume () {
         UnityNativeModule.resume()
+    }
+
+    public unload () {
+        UnityNativeModule.unload()
+    }
+
+    public reInitialize()
+    {
+        UnityNativeModule.reInitialize()
     }
 
     public addMessageListener (listener: (handler: string | MessageHandler) => void) {
