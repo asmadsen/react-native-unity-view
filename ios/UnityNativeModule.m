@@ -53,6 +53,4 @@ RCT_EXPORT_METHOD(reInitialize)
     UnityReInitializeCommand();
 }
 
-//A comment thing
-
 @end

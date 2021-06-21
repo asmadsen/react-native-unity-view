@@ -40,6 +40,22 @@ UnityFramework* UnityFrameworkLoad() {
     return ufw;
 }
 
+extern "C" void InitUnity()
+{
+    ufw = UnityFrameworkLoad();
+
+    [ufw setDataBundleId: "com.unity3d.framework"];
+    [ufw frameworkWarmup: g_argc argv: g_argv];
+
+    UIApplication* application = [UIApplication sharedApplication];
+
+    UnityAppController *controller = GetAppController();
+    [controller application:application didFinishLaunchingWithOptions:nil];
+    [controller applicationDidBecomeActive:application];
+    
+    unity_inited = true;
+}
+
 extern "C" void UnityPostMessage(NSString* gameObject, NSString* methodName, NSString* message)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -61,22 +77,26 @@ extern "C" void UnityResumeCommand()
     });
 }
 
+// Unloads the Unity Runtime
 extern "C" void UnityUnloadCommand()
 {
-    unity_unloaded = true;
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [ufw unloadApplication];
-    });
+    if (unity_inited && !unity_unloaded)
+    {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [ufw unloadApplication];
+            unity_unloaded = true;
+        });
+    }
 }
 
+// Loads Unity after "[ufw unloadApplication];"
 extern "C" void UnityReInitializeCommand()
 {
-    if (unity_unloaded)
+    if (unity_inited && unity_unloaded)
     {
-    // initialize from partial unload ( sceneLessMode & onPause )
         dispatch_async(dispatch_get_main_queue(), ^{
             [ufw reloadApplication];
+            unity_unloaded = false;
         });
     }
 }
@@ -131,11 +151,6 @@ static BOOL _isUnityReady = NO;
     }
 }
 
-extern "C" void InitUnity()
-{
-    
-}
-
 + (void)createPlayer:(void (^)(void))completed
 {
     if (_isUnityReady) {
@@ -151,24 +166,16 @@ extern "C" void InitUnity()
     if (UnityIsInited()) {
         return;
     }
-    
+
     dispatch_async(dispatch_get_main_queue(), ^{
         UIApplication* application = [UIApplication sharedApplication];
 
         // Always keep RN window in top
         application.keyWindow.windowLevel = UIWindowLevelNormal + 1;
 
-        unity_inited = true;
+        // Initialize Unity
+        InitUnity();
 
-        ufw = UnityFrameworkLoad();
-
-        [ufw setDataBundleId: "com.unity3d.framework"];
-        [ufw frameworkWarmup: g_argc argv: g_argv];
-        
-        UnityAppController *controller = GetAppController();
-        [controller application:application didFinishLaunchingWithOptions:nil];
-        [controller applicationDidBecomeActive:application];
-        
         // Makes RN window key window to handle events
         [application.windows[1] makeKeyWindow];
         
