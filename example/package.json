@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "react": "16.8.1",
-    "react-native": "0.61.3",
+    "react-native": "0.62.3",
     "@asmadsen/react-native-unity-view": "file:../"
   },
   "devDependencies": {
