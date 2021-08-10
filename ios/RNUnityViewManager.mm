@@ -1,6 +1,9 @@
 #import "RNUnityViewManager.h"
 #import "RNUnityView.h"
 
+// TODO FIXME
+#include "../../../../../../../modules/roli_studio_engine/Misc/UnityBridge.h"
+
 @implementation RNUnityViewManager
 
 @synthesize bridge = _bridge;
@@ -11,16 +14,23 @@ RCT_EXPORT_MODULE(RNUnityView)
 {
     self.currentView = [[RNUnityView alloc] init];
     if ([UnityUtils isUnityReady]) {
-        [self.currentView setUnityView: [GetAppController() unityView]];
+        [self.currentView setUnityView: (RNUnityView*)[GetAppController() unityView]];
     } else {
         [UnityUtils createPlayer:^{
-            [self.currentView setUnityView: [GetAppController() unityView]];
+            [self.currentView setUnityView: (RNUnityView*)[GetAppController() unityView]];
         }];
         [GetAppController() setUnityMessageHandler: ^(const char* message) {
+            roli::studio::UnityBridge::instance().onUnityMessage (message);
+
             [_bridge.eventDispatcher sendDeviceEventWithName:@"onUnityMessage"
                                                             body:[NSString stringWithUTF8String:message]];
         }];
     }
+
+    roli::studio::UnityBridge::instance().setSendMessageToUnityCallback ([](const char* message) {
+        UnityPostMessage(@"UnityMessageManager", @"onRNMessage", [NSString stringWithUTF8String: message]);
+    });
+
     return self.currentView;
 }
 

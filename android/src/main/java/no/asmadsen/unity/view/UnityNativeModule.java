@@ -9,9 +9,16 @@ import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 public class UnityNativeModule extends ReactContextBaseJavaModule implements UnityEventListener {
 
+    // Added reference to native method defined in UnityBridge.h for capturing Java env
+    private native void unityBridgeSetup();
+
     public UnityNativeModule(ReactApplicationContext reactContext) {
         super(reactContext);
         UnityUtils.addUnityEventListener(this);
+
+        // Add call to UnityBridge.h to capture Java env
+        System.loadLibrary ("juce_jni");
+        unityBridgeSetup();
     }
 
     @Override
@@ -50,9 +57,19 @@ public class UnityNativeModule extends ReactContextBaseJavaModule implements Uni
         UnityUtils.resume();
     }
 
+    // Added reference to native method defined in UnityBridge.h for direct communcation
+    private native void unityBridgeOnUnityMessage (String message);
+
     @Override
     public void onMessage(String message) {
         ReactContext context = getReactApplicationContext();
         context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("onUnityMessage", message);
+        unityBridgeOnUnityMessage (message);
+    }
+
+    // Added callback referenced in UnityBridge.h for direct communcation
+    public static void postMessageToUnity (final String message)
+    {
+        UnityUtils.postMessage("UnityMessageManager", "onRNMessage", message);
     }
 }
