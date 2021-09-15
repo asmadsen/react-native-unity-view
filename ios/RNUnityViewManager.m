@@ -10,6 +10,7 @@ RCT_EXPORT_MODULE(RNUnityView)
 - (UIView *)view
 {
     self.currentView = [[RNUnityView alloc] init];
+#if !TARGET_OS_SIMULATOR
     if ([UnityUtils isUnityReady]) {
         [self.currentView setUnityView: [GetAppController() unityView]];
     } else {
@@ -21,6 +22,8 @@ RCT_EXPORT_MODULE(RNUnityView)
                                                             body:[NSString stringWithUTF8String:message]];
         }];
     }
+#endif
+    
     return self.currentView;
 }
 
