@@ -18,12 +18,12 @@ Pod::Spec.new do |s|
 
   s.source_files = "ios/**/*.{h,m,mm}"
   s.public_header_files = 'ios/**/*.h'
-  s.frameworks = 'UnityFramework'
+  # s.weak_frameworks = 'UnityFramework'
   s.dependency "React"
 
   s.xcconfig = {
     'FRAMEWORK_SEARCH_PATHS' => '"${PODS_ROOT}/../unityExport" "${PODS_CONFIGURATION_BUILD_DIR}"',
-    'OTHER_LDFLAGS' => '$(inherited) -weak_framework UnityFramework ${PODS_LIBRARIES}'
+    'OTHER_LDFLAGS[sdk=iphoneos*]' => '$(inherited) -framework UnityFramework ${PODS_LIBRARIES}'
   }
 end
 
