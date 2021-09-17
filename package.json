@@ -1,17 +1,21 @@
 {
   "name": "@cartographr/react-native-unity-view",
   "title": "React Native Unity View",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Embed Unity Player inside a React Native app",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "rimraf dist/ && tsc"
+    "build": "rimraf dist/ && tsc",
+    "prepublishOnly": "yarn build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/asmadsen/react-native-unity-view.git",
-    "baseUrl": "https://github.com/asmadsen/react-native-unity-view"
+    "url": "git://github.com/cartographr/react-native-unity-view.git",
+    "baseUrl": "https://github.com/cartographr/react-native-unity-view"
+  },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com"
   },
   "keywords": [
     "react-native"
