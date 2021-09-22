@@ -15,7 +15,7 @@
     "baseUrl": "https://github.com/cartographr/react-native-unity-view"
   },
   "publishConfig": {
-    "registry":"https://npm.pkg.github.com"
+    "registry": "https://npm.pkg.github.com"
   },
   "keywords": [
     "react-native"
