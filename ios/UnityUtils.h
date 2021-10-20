@@ -1,5 +1,7 @@
 #import <Foundation/Foundation.h>
+#if !TARGET_OS_SIMULATOR
 #import <UnityFramework/UnityFramework.h>
+#endif // !TARGET_OS_SIMULATOR
 
 #ifndef UnityUtils_h
 #define UnityUtils_h

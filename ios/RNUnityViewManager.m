@@ -23,7 +23,7 @@ RCT_EXPORT_MODULE(RNUnityView)
         [_bridge.eventDispatcher sendDeviceEventWithName:@"onUnityMessage"
                                                     body:[NSString stringWithUTF8String:message]];
     }];
-#endif
+#endif // !TARGET_OS_SIMULATOR
     
     return self.currentView;
 }

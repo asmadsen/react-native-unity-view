@@ -15,7 +15,9 @@ char** g_argv;
 
 void UnityInitTrampoline();
 
+#if !TARGET_OS_SIMULATOR
 UnityFramework* ufw;
+#endif // !TARGET_OS_SIMULATOR
 
 extern "C" void InitArgs(int argc, char* argv[])
 {
@@ -28,6 +30,7 @@ extern "C" bool UnityIsInited()
     return unity_inited;
 }
 
+#if !TARGET_OS_SIMULATOR
 UnityFramework* UnityFrameworkLoad() {
     NSString* bundlePath = nil;
     bundlePath = [[NSBundle mainBundle] bundlePath];
@@ -39,6 +42,7 @@ UnityFramework* UnityFrameworkLoad() {
     UnityFramework* ufw = [bundle.principalClass getInstance];
     return ufw;
 }
+#endif // !TARGET_OS_SIMULATOR
 
 extern "C" void InitUnity()
 {
@@ -52,7 +56,7 @@ extern "C" void InitUnity()
 
     [ufw setDataBundleId: "com.unity3d.framework"];
     [ufw frameworkWarmup: g_argc argv: g_argv];
-#endif
+#endif // !TARGET_OS_SIMULATOR
 }
 
 extern "C" void UnityPostMessage(NSString* gameObject, NSString* methodName, NSString* message)
