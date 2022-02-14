@@ -77,6 +77,8 @@ public class UnityUtils {
         if (!_isUnityReady) {
             return;
         }
+        pause();
+        resume();
         UnityPlayer.UnitySendMessage(gameObject, methodName, message);
     }
 
