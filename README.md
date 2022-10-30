@@ -49,7 +49,7 @@ the Untiy Project*
 
 #### Player Settings
 
-1. Open your Unity Project
+1. Open your Unity Project and wait for build
 2. Go to Player settings (File => Build Settings => Player Settings)
 3. Change `Product Name` to the name of your Xcode project. (`ios/${XcodeProjectName}.xcodeproj`)
 
